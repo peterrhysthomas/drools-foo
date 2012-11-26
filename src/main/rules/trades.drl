@@ -1,0 +1,25 @@
+package com.sample
+
+salience 10
+rule "When there is no statistic for a trade, insert the statistic"
+when
+     $trade : Trade()
+     not TradeStatistic(tradeKey == $trade.getKey())
+then
+     insert( new TradeStatistic( $trade.getKey() ) );
+end;
+ 
+salience 20
+rule "Add the trade to the statistics"
+when
+    $trade : Trade()
+    $statistic : TradeStatistic(tradeKey == $trade.getKey())
+    not Processed (tradeReference == $trade.getReference())
+then 
+    modify ($statistic) {addTrade($trade)};
+    insert(new Processed($trade.getReference()));
+end;
+
+query "trade statistics"
+  tradeStatistic : TradeStatistic()
+end;
