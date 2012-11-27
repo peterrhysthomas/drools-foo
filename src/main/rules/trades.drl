@@ -29,3 +29,17 @@ query "trade count"
     $trade : Trade(), count($trade))
 end;
 
+salience 10
+rule "When there is no key for a trade, insert the key"
+when
+     $trade : Trade()
+     not TradeKey(key == $trade.getKey())
+then
+     insert( new TradeKey( $trade) );
+end;
+
+query "trade key count"
+  $key : TradeKey()
+  Number($tradeCount : intValue) from accumulate (
+    $trade : Trade(key == $key.getKey()), count($trade))
+end;
