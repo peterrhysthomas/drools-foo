@@ -18,10 +18,8 @@ import org.junit.Test;
 
 public class DroolsTradesTest {
 
-	private Trade trade1, trade2, trade3, trade4, trade5, trade6;
-
 	@Test
-    public void blah(){
+    public void testTradeSummaryCount(){
     	KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
     	kbuilder.add( ResourceFactory.newClassPathResource( "trades.drl"), ResourceType.DRL );
     	if ( kbuilder.hasErrors() ) {
@@ -31,12 +29,12 @@ public class DroolsTradesTest {
     	kbase.addKnowledgePackages( kbuilder.getKnowledgePackages() );
     	StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
     	
-		trade1 = new Trade("REF1", "IBM", "CPY1", "GB", 100.0, 999.99);
-		trade2 = new Trade("REF2", "IBM", "CPY1", "GB", 200.0, 2000.01);
-		trade3 = new Trade("REF3", "IBM", "CPY1", "FRA", 200.0, 2000.01);
-		trade4 = new Trade("REF4", "APL", "CPY2", "GB", 400.0, 3000.01);
-		trade5 = new Trade("REF5", "IBM", "CPY2", "GB", 500.0, 4999.99);
-		trade6 = new Trade("REF6", "MCS", "CPY1", "GB", 600.0, 5000.01);
+    	Trade trade1 = new Trade("REF1", "IBM", "CPY1", "GB", 100.0, 999.99);
+    	Trade trade2 = new Trade("REF2", "IBM", "CPY1", "GB", 200.0, 2000.01);
+    	Trade trade3 = new Trade("REF3", "IBM", "CPY1", "FRA", 200.0, 2000.01);
+    	Trade trade4 = new Trade("REF4", "APL", "CPY2", "GB", 400.0, 3000.01);
+    	Trade trade5 = new Trade("REF5", "IBM", "CPY2", "GB", 500.0, 4999.99);
+    	Trade trade6 = new Trade("REF6", "MCS", "CPY1", "GB", 600.0, 5000.01);
 		
 		ksession.insert(trade1);
 		ksession.insert(trade2);
@@ -47,47 +45,11 @@ public class DroolsTradesTest {
 		
 		ksession.fireAllRules();
 		
-		assertTradeCountQuery(ksession);
-		
-		QueryResults results = ksession.getQueryResults("trade statistics");
+		QueryResults results = ksession.getQueryResults("trade key count");
 		assertEquals(5, results.size());
 		
-		Map<TradeKey, TradeStatistic> statistics = new HashMap<TradeKey, TradeStatistic>();
-		
-		for (QueryResultsRow row : results ) {
-			TradeStatistic statistic = (TradeStatistic) row.get("tradeStatistic");
-			statistics.put(statistic.getTradeKey(), statistic);
-		}
-		
-		assertEquals(5, statistics.size());
-		assertTrue(statistics.containsKey(trade1.getKey()));
-		assertTrue(statistics.containsKey(trade2.getKey()));
-		assertTrue(statistics.containsKey(trade3.getKey()));
-		assertTrue(statistics.containsKey(trade4.getKey()));
-		assertTrue(statistics.containsKey(trade5.getKey()));
-		assertTrue(statistics.containsKey(trade6.getKey()));
-		
-		assertEquals(2, statistics.get(trade1.getKey()).getCount());
-		assertEquals(2, statistics.get(trade2.getKey()).getCount());
-		assertEquals(1, statistics.get(trade3.getKey()).getCount());
-		assertEquals(1, statistics.get(trade4.getKey()).getCount());
-		assertEquals(1, statistics.get(trade5.getKey()).getCount());
-		assertEquals(1, statistics.get(trade6.getKey()).getCount());
-    }
-
-	private void assertTradeCountQuery(StatefulKnowledgeSession ksession) {
-		QueryResults results2 = ksession.getQueryResults("trade count");
-		assertEquals(1, results2.size());
-		
-		for (QueryResultsRow row : results2 ) {
-			assertEquals(6.0, row.get("$tradeCount"));
-		}
-	
-		QueryResults results3 = ksession.getQueryResults("trade key count");
-		assertEquals(5, results3.size());
-		
 		Map<TradeKey, Integer> statistics = new HashMap<TradeKey, Integer>();
-		for (QueryResultsRow row : results3 ) {
+		for (QueryResultsRow row : results ) {
 			statistics.put((TradeKey) row.get("$key"), (Integer) row.get("$tradeCount"));
 		}
 
@@ -97,7 +59,5 @@ public class DroolsTradesTest {
 		assertEquals(1, statistics.get(trade4.getKey()).intValue());
 		assertEquals(1, statistics.get(trade5.getKey()).intValue());
 		assertEquals(1, statistics.get(trade6.getKey()).intValue());
-		
 	}
-
 }

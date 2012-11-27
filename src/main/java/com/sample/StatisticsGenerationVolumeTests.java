@@ -32,7 +32,7 @@ public class StatisticsGenerationVolumeTests {
 		
 		StopWatch query = new StopWatch();
 		query.start();
-		QueryResults results = ksession.getQueryResults("trade statistics");
+		QueryResults results = ksession.getQueryResults("trade key count");
 		query.stop();
 		System.out.println("Query took " + query.getTotalTimeSeconds());
 		
