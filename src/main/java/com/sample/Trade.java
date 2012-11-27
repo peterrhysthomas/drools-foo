@@ -45,7 +45,4 @@ public class Trade {
 	public String getReference() {
 		return reference;
 	}
-	
-	
-
 }

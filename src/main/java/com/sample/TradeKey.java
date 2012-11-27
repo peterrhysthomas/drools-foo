@@ -34,30 +34,6 @@ public class TradeKey {
 		return (this.stock + this.counterparty + this.countryOfExecution).hashCode();
 	}
 	
-	public boolean partialMatch(TradeKey that) {
-		if (this.equals(that)){
-			return true;
-		}
-		
-		if (that.getStock() != null){
-			if (!that.getStock().equals(this.getStock())){
-				return false;
-			}
-		}
-		if (that.getCounterparty() != null){
-			if (!that.getCounterparty().equals(this.getCounterparty())){
-				return false;
-			}
-		}
-		if (that.getCountryOfExecution() != null){
-			if (!that.getCountryOfExecution().equals(this.getCountryOfExecution())){
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 	public String getStock() {
 		return stock;
 	}
