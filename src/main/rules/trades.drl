@@ -23,3 +23,9 @@ end;
 query "trade statistics"
   tradeStatistic : TradeStatistic()
 end;
+
+query "trade count"
+  Number($tradeCount :doubleValue) from accumulate (
+    $trade : Trade(), count($trade))
+end;
+

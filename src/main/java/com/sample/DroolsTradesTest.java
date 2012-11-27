@@ -45,6 +45,8 @@ public class DroolsTradesTest {
 		
 		ksession.fireAllRules();
 		
+		assertTradeCountQuery(ksession);
+		
 		QueryResults results = ksession.getQueryResults("trade statistics");
 		assertEquals(5, results.size());
 		
@@ -70,4 +72,13 @@ public class DroolsTradesTest {
 		assertEquals(1, statistics.get(trade5.getKey()).getCount());
 		assertEquals(1, statistics.get(trade6.getKey()).getCount());
     }
+
+	private void assertTradeCountQuery(StatefulKnowledgeSession ksession) {
+		QueryResults results2 = ksession.getQueryResults("trade count");
+		assertEquals(1, results2.size());
+		
+		for (QueryResultsRow row : results2 ) {
+			assertEquals(6.0, row.get("$tradeCount"));
+		}
+	}
 }

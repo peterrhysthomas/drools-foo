@@ -1,8 +1,6 @@
 package com.sample;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 
 import org.drools.KnowledgeBase;
